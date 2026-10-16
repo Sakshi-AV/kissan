@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marketplace – Kissan Cart | Direct Farm Harvests</title>
+  <meta name="description" content="Shop fresh farm vegetables, fruits, millets, basmati rice, pulses, and organic inputs directly from local growers." />
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/dashboards.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <style>
+    .shop-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+      margin-bottom: 4rem;
+    }
+    .shop-filter-sidebar {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      height: fit-content;
+      position: sticky;
+      top: 90px;
+    }
+    .filter-section-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .filter-pills-row {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .filter-pill {
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 700;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all var(--transition-fast);
+    }
+    .filter-pill.active {
+      background: linear-gradient(135deg, var(--color-green-600), var(--color-green-700));
+      color: #fff;
+      border-color: var(--color-green-700);
+      box-shadow: 0 4px 10px rgba(22, 163, 74, 0.2);
+    }
+    .shop-results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1.25rem;
+    }
+    .price-range-inputs {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .pagination-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+    @media (max-width: 900px) {
+      .shop-layout {
+        grid-template-columns: 1fr;
+      }
+      .shop-filter-sidebar {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="/index.html" class="brand-logo">
+        <div class="logo-badge"><i class="fa-solid fa-seedling"></i></div>
+        <div class="brand-text">
+          <span class="brand-name">Kissan<span>Cart</span></span>
+          <span class="brand-sub" data-i18n="tagline">From Our Farms to Your Homes</span>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/index.html" class="nav-link" data-i18n="nav_home">Home</a></li>
+        <li><a href="/shop.html" class="nav-link active" data-i18n="nav_shop">Shop</a></li>
+        <li><a href="/index.html#categoriesSection" class="nav-link" data-i18n="nav_categories">Categories</a></li>
+        <li><a href="/register.html?role=farmer" class="nav-link" data-i18n="nav_sell">Sell Products</a></li>
+      </ul>
+
+      <form class="header-search" id="navbarSearchForm">
+        <div class="search-input-wrapper">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="navbarSearchInput" class="search-input" placeholder="Search crops..." data-i18n-placeholder="search_placeholder" />
+        </div>
+      </form>
+
+      <div class="nav-actions">
+        <div class="lang-selector-wrapper">
+          <i class="fa-solid fa-globe lang-globe-icon"></i>
+          <select id="languageSelect" class="lang-select">
+            <option value="en">English</option>
+            <option value="kn">ಕನ್ನಡ (Kannada)</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+          </select>
+          <i class="fa-solid fa-chevron-down lang-arrow"></i>
+        </div>
+
+        <button id="themeToggle" class="btn-icon-toggle"><i class="fa-solid fa-moon"></i></button>
+
+        <a href="/cart.html" class="cart-nav-link" id="cartNavBtn">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <span id="cartBadge" class="cart-badge" style="display: none;">0</span>
+        </a>
+
+        <div id="navbarAuth"></div>
+
+        <button class="mobile-menu-btn" id="mobileMenuToggle"><i class="fa-solid fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+  <aside class="mobile-nav-drawer" id="mobileNavDrawer">
+    <div class="drawer-header">
+      <div class="brand-logo">
+        <div class="logo-badge"><i class="fa-solid fa-seedling"></i></div>
+        <div class="brand-text"><span class="brand-name">Kissan<span>Cart</span></span></div>
+      </div>
+      <button class="drawer-close-btn" id="mobileMenuClose">&times;</button>
+    </div>
+    <ul class="mobile-nav-links">
+      <li class="mobile-nav-item"><a href="/index.html"><i class="fa-solid fa-house"></i> Home</a></li>
+      <li class="mobile-nav-item"><a href="/shop.html"><i class="fa-solid fa-store"></i> Shop</a></li>
+      <li class="mobile-nav-item"><a href="/cart.html"><i class="fa-solid fa-basket-shopping"></i> Cart</a></li>
+      <li class="mobile-nav-item"><a href="/register.html?role=farmer"><i class="fa-solid fa-tractor"></i> Sell Products</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container" style="padding-top: 2rem;">
+      
+      <!-- Page Header -->
+      <div style="margin-bottom: 1.5rem;">
+        <h1 style="font-size: 2.2rem; font-weight: 800; color: var(--text-primary);" data-i18n="shop_title">Agricultural Marketplace</h1>
+        <p style="color: var(--text-muted); font-size: 1rem;" data-i18n="shop_subtitle">Browse wholesome crops, grains, dairy, and farming tools direct from certified farms</p>
+      </div>
+
+      <!-- Quick Category Filter Pills -->
+      <div class="filter-pills-row" id="categoryPillsContainer">
+        <!-- Injected via shop.js -->
+      </div>
+
+      <!-- Marketplace 2-column layout -->
+      <div class="shop-layout">
+        
+        <!-- Filter Sidebar -->
+        <aside class="shop-filter-sidebar">
+          <div class="filter-section-title">
+            <span data-i18n="filter_by">Filter Products</span>
+            <button id="resetFiltersBtn" class="btn btn-secondary btn-sm" title="Clear all filters">
+              <i class="fa-solid fa-rotate-left"></i> Reset
+            </button>
+          </div>
+
+          <form id="shopFilterForm">
+            <!-- Keyword search -->
+            <div class="form-group">
+              <label class="form-label">Keyword</label>
+              <input type="text" id="shopKeywordInput" class="form-control" placeholder="Crop or item name..." />
+            </div>
+
+            <!-- Category -->
+            <div class="form-group">
+              <label class="form-label" data-i18n="filter_category">Category</label>
+              <select id="filterCategorySelect" class="form-select">
+                <option value="all" data-i18n="filter_all_categories">All Categories</option>
+              </select>
+            </div>
+
+            <!-- Price Range -->
+            <div class="form-group">
+              <label class="form-label" data-i18n="filter_price_range">Price Range (₹)</label>
+              <div class="price-range-inputs">
+                <input type="number" id="minPriceInput" class="form-control" placeholder="Min" min="0" />
+                <span>-</span>
+                <input type="number" id="maxPriceInput" class="form-control" placeholder="Max" min="0" />
+              </div>
+            </div>
+
+            <!-- Location -->
+            <div class="form-group">
+              <label class="form-label" data-i18n="filter_location">Farm Location / City</label>
+              <input type="text" id="locationFilterInput" class="form-control" placeholder="e.g. Mandya, Shivamogga" />
+            </div>
+
+            <!-- Organic Only -->
+            <div class="form-group">
+              <label class="form-check">
+                <input type="checkbox" id="organicCheck" />
+                <span data-i18n="filter_organic_only">100% Organic Only</span>
+              </label>
+            </div>
+
+            <!-- In Stock Only -->
+            <div class="form-group">
+              <label class="form-check">
+                <input type="checkbox" id="inStockCheck" />
+                <span data-i18n="filter_in_stock_only">In Stock Only</span>
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+              <i class="fa-solid fa-filter"></i>
+              <span>Apply Filters</span>
+            </button>
+          </form>
+        </aside>
+
+        <!-- Product Listings Column -->
+        <section>
+          <!-- Results Header & Sort Dropdown -->
+          <div class="shop-results-header">
+            <span id="resultsCount" style="font-size: 0.9rem; font-weight: 700; color: var(--text-secondary);">
+              Loading harvests...
+            </span>
+
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <label for="sortBySelect" style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);" data-i18n="sort_by">Sort By:</label>
+              <select id="sortBySelect" class="form-select" style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+                <option value="newest" data-i18n="sort_newest">Newest Harvests</option>
+                <option value="price_asc" data-i18n="sort_price_low">Price: Low to High</option>
+                <option value="price_desc" data-i18n="sort_price_high">Price: High to Low</option>
+                <option value="rating" data-i18n="sort_rating">Highest Rated</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Products Grid -->
+          <div class="product-grid" id="shopProductsGrid">
+            <!-- Injected via shop.js -->
+          </div>
+
+          <!-- Pagination Bar -->
+          <div class="pagination-bar" id="paginationControls"></div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <p>&copy; 2026 Kissan Cart Inc. <span data-i18n="all_rights_reserved">All rights reserved. Dedicated to India's farming community.</span></p>
+    </div>
+  </footer>
+
+  <script src="js/translations.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/shop.js"></script>
+</body>
+</html>

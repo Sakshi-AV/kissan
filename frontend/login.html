@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login – Kissan Cart | Direct Agricultural Portal</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/dashboards.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+
+  <style>
+    .auth-page-wrapper {
+      min-height: calc(100vh - 72px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+      background: radial-gradient(circle at top right, var(--color-green-50), var(--bg-secondary));
+    }
+    .auth-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 2.75rem 2.5rem;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: var(--shadow-xl);
+    }
+    .demo-fast-fill-box {
+      background-color: var(--bg-secondary);
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      margin-top: 1.75rem;
+    }
+    .demo-buttons-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+    .btn-demo-fill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.55rem 0.85rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background-color: var(--card-bg);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      text-align: left;
+    }
+    .btn-demo-fill:hover {
+      border-color: var(--color-green-600);
+      background-color: var(--color-green-50);
+      color: var(--color-green-700);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="/index.html" class="brand-logo">
+        <div class="logo-badge"><i class="fa-solid fa-seedling"></i></div>
+        <div class="brand-text">
+          <span class="brand-name">Kissan<span>Cart</span></span>
+          <span class="brand-sub" data-i18n="tagline">From Our Farms to Your Homes</span>
+        </div>
+      </a>
+
+      <div class="nav-actions">
+        <div class="lang-selector-wrapper">
+          <i class="fa-solid fa-globe lang-globe-icon"></i>
+          <select id="languageSelect" class="lang-select">
+            <option value="en">English</option>
+            <option value="kn">ಕನ್ನಡ (Kannada)</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+          </select>
+          <i class="fa-solid fa-chevron-down lang-arrow"></i>
+        </div>
+
+        <button id="themeToggle" class="btn-icon-toggle"><i class="fa-solid fa-moon"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Auth Content -->
+  <main class="auth-page-wrapper">
+    <div class="auth-card">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <div style="width: 54px; height: 54px; border-radius: var(--radius-lg); background: linear-gradient(135deg, var(--color-green-600), var(--color-green-700)); color: #fff; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; box-shadow: 0 4px 10px rgba(22, 163, 74, 0.3);">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <h2 style="font-size: 1.75rem; font-weight: 800; color: var(--text-primary);" data-i18n="login_title">Sign in to Kissan Cart</h2>
+        <p style="font-size: 0.92rem; color: var(--text-muted); margin-top: 0.25rem;" data-i18n="login_subtitle">Access your agricultural marketplace dashboard</p>
+      </div>
+
+      <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+        <div class="form-group">
+          <label class="form-label" data-i18n="email_label">Email Address</label>
+          <input type="email" id="loginEmail" class="form-control" placeholder="name@kissancart.com" required />
+        </div>
+
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
+            <label class="form-label" style="margin-bottom: 0;" data-i18n="password_label">Password</label>
+            <a href="#" style="font-size: 0.8rem; color: var(--color-green-600); font-weight: 600;" onclick="showToast('For local evaluation, use the demo logins below.', 'info')">Forgot Password?</a>
+          </div>
+          <div style="position: relative;">
+            <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required />
+            <button type="button" onclick="togglePasswordVisibility()" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer;">
+              <i class="fa-regular fa-eye" id="passwordToggleIcon"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" id="submitLoginBtn" class="btn btn-primary btn-lg btn-block" style="margin-top: 1.5rem;">
+          <i class="fa-solid fa-right-to-bracket"></i>
+          <span data-i18n="btn_login">Login</span>
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
+        <span data-i18n="dont_have_account">Don't have an account?</span>
+        <a href="/register.html" style="color: var(--color-green-600); font-weight: 700; margin-left: 0.25rem;">Register now</a>
+      </div>
+
+      <!-- Quick Demo Login Fast-Fill -->
+      <div class="demo-fast-fill-box">
+        <span style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;" data-i18n="demo_accounts">
+          Quick Demo Accounts (Evaluation)
+        </span>
+        
+        <div class="demo-buttons-grid">
+          <button type="button" class="btn-demo-fill" onclick="fastFillLogin('ramesh.farmer@kissancart.com', 'farmer123')">
+            <span><i class="fa-solid fa-tractor" style="color: var(--color-green-600); margin-right: 0.4rem;"></i> Farmer (Ramesh Patel)</span>
+            <span class="badge badge-verified" style="font-size: 0.65rem;">Verified</span>
+          </button>
+
+          <button type="button" class="btn-demo-fill" onclick="fastFillLogin('priya.customer@kissancart.com', 'customer123')">
+            <span><i class="fa-solid fa-cart-shopping" style="color: var(--color-blue-600); margin-right: 0.4rem;"></i> Customer (Priya Sharma)</span>
+            <span class="badge" style="background-color: #e0f2fe; color: #0284c7; font-size: 0.65rem;">Buyer</span>
+          </button>
+
+          <button type="button" class="btn-demo-fill" onclick="fastFillLogin('admin@kissancart.com', 'admin123')">
+            <span><i class="fa-solid fa-shield-halved" style="color: var(--color-yellow-600); margin-right: 0.4rem;"></i> Platform Administrator</span>
+            <span class="badge" style="background-color: #fef08a; color: #854d0e; font-size: 0.65rem;">Admin</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/translations.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+
+  <script>
+    function togglePasswordVisibility() {
+      const input = document.getElementById('loginPassword');
+      const icon = document.getElementById('passwordToggleIcon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fa-regular fa-eye-slash';
+      } else {
+        input.type = 'password';
+        icon.className = 'fa-regular fa-eye';
+      }
+    }
+
+    function fastFillLogin(email, pass) {
+      document.getElementById('loginEmail').value = email;
+      document.getElementById('loginPassword').value = pass;
+      showToast(`Credentials filled for ${email}. Click Login!`, 'info');
+    }
+
+    async function handleLoginSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const pass = document.getElementById('loginPassword').value;
+      const btn = document.getElementById('submitLoginBtn');
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Signing in...';
+
+      try {
+        const data = await auth.login(email, pass);
+        showToast(`Welcome back, ${data.user.name}!`, 'success');
+
+        // Check for redirect url
+        const params = new URLSearchParams(window.location.search);
+        const redirectUrl = params.get('redirect');
+
+        setTimeout(() => {
+          if (redirectUrl) {
+            window.location.href = decodeURIComponent(redirectUrl);
+          } else {
+            window.location.href = auth.getDashboardUrl(data.user.role);
+          }
+        }, 600);
+      } catch (err) {
+        showToast(err.message || 'Login failed', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Login';
+      }
+    }
+  </script>
+</body>
+</html>

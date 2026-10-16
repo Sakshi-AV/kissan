@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Dashboard – Kissan Cart</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/dashboards.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+
+  <!-- Sticky Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="/index.html" class="brand-logo">
+        <div class="logo-badge"><i class="fa-solid fa-seedling"></i></div>
+        <div class="brand-text">
+          <span class="brand-name">Kissan<span>Cart</span></span>
+          <span class="brand-sub" data-i18n="tagline">From Our Farms to Your Homes</span>
+        </div>
+      </a>
+
+      <div style="font-weight: 800; color: var(--color-green-700); font-size: 1.05rem;">
+        <i class="fa-solid fa-user-circle" style="margin-right: 0.4rem;"></i> Customer Account
+      </div>
+
+      <div class="nav-actions">
+        <div class="lang-selector-wrapper">
+          <i class="fa-solid fa-globe lang-globe-icon"></i>
+          <select id="languageSelect" class="lang-select">
+            <option value="en">English</option>
+            <option value="kn">ಕನ್ನಡ (Kannada)</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+          </select>
+          <i class="fa-solid fa-chevron-down lang-arrow"></i>
+        </div>
+
+        <button id="themeToggle" class="btn-icon-toggle"><i class="fa-solid fa-moon"></i></button>
+
+        <a href="/shop.html" class="btn btn-secondary btn-sm">
+          <i class="fa-solid fa-store"></i> Shop More
+        </a>
+
+        <a href="/cart.html" class="cart-nav-link" id="cartNavBtn">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <span id="cartBadge" class="cart-badge" style="display: none;">0</span>
+        </a>
+
+        <div id="navbarAuth"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Dashboard Shell -->
+  <div class="dashboard-wrapper">
+    
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar">
+      <div class="sidebar-profile-card">
+        <img id="sidebarCustomerAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" class="sidebar-avatar" />
+        <div>
+          <h4 id="sidebarCustomerName" class="sidebar-user-name">Priya Sharma</h4>
+          <span class="sidebar-role-badge customer-badge">Consumer</span>
+        </div>
+      </div>
+
+      <ul class="sidebar-nav">
+        <li>
+          <button class="sidebar-item-link active" data-pane="overview">
+            <i class="fa-solid fa-gauge-high"></i>
+            <span data-i18n="dashboard_overview">Overview</span>
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-item-link" data-pane="orders">
+            <i class="fa-solid fa-box"></i>
+            <span>My Orders</span>
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-item-link" data-pane="wishlist">
+            <i class="fa-solid fa-heart"></i>
+            <span>Wishlist</span>
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-item-link" data-pane="reviews">
+            <i class="fa-solid fa-star"></i>
+            <span>My Reviews</span>
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-item-link" data-pane="notifications">
+            <i class="fa-solid fa-bell"></i>
+            <span>Notifications</span>
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-item-link" data-pane="profile">
+            <i class="fa-solid fa-address-card"></i>
+            <span>Saved Addresses</span>
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-item-link" data-pane="logout">
+            <i class="fa-solid fa-right-from-bracket" style="color: var(--color-red-600);"></i>
+            <span data-i18n="nav_logout">Logout</span>
+          </button>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Dashboard Body -->
+    <main class="dashboard-main">
+      
+      <!-- PANE 1: Overview -->
+      <section id="pane-overview" class="dashboard-view-pane active">
+        <div class="dashboard-header">
+          <div class="dashboard-title-group">
+            <h2>Welcome back, <span id="customerGreetingName">Priya</span>!</h2>
+            <p>Track your fresh harvest deliveries and manage personal preferences.</p>
+          </div>
+          <a href="/shop.html" class="btn btn-primary">
+            <i class="fa-solid fa-basket-shopping"></i> Shop Fresh Produce
+          </a>
+        </div>
+
+        <div class="metrics-grid">
+          
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-icon kpi-blue">
+              <i class="fa-solid fa-box"></i>
+            </div>
+            <div class="stat-kpi-meta">
+              <span id="kpiCustomerOrders" class="stat-kpi-value">0</span>
+              <span class="stat-kpi-label" data-i18n="cd_total_orders">Total Orders</span>
+            </div>
+          </div>
+
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-icon kpi-green">
+              <i class="fa-solid fa-indian-rupee-sign"></i>
+            </div>
+            <div class="stat-kpi-meta">
+              <span id="kpiCustomerSpent" class="stat-kpi-value">₹0</span>
+              <span class="stat-kpi-label" data-i18n="cd_total_spent">Total Spent</span>
+            </div>
+          </div>
+
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-icon kpi-red">
+              <i class="fa-solid fa-heart"></i>
+            </div>
+            <div class="stat-kpi-meta">
+              <span id="kpiCustomerWishlist" class="stat-kpi-value">0</span>
+              <span class="stat-kpi-label" data-i18n="cd_wishlist_count">Saved Items</span>
+            </div>
+          </div>
+
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-icon kpi-yellow">
+              <i class="fa-solid fa-star"></i>
+            </div>
+            <div class="stat-kpi-meta">
+              <span id="kpiCustomerReviews" class="stat-kpi-value">0</span>
+              <span class="stat-kpi-label" data-i18n="cd_my_reviews">Reviews Given</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Recent Orders table -->
+        <div class="dashboard-table-card">
+          <div class="table-card-header">
+            <h3 data-i18n="cd_order_history">Recent Orders</h3>
+            <button class="btn btn-secondary btn-sm" onclick="switchPane('orders')">View All</button>
+          </div>
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Order Number</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="recentCustomerOrdersTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANE 2: My Orders -->
+      <section id="pane-orders" class="dashboard-view-pane">
+        <div class="dashboard-header">
+          <div class="dashboard-title-group">
+            <h2 data-i18n="cd_order_history">Order History & Tracking</h2>
+            <p>View your past purchases, follow delivery progress, or request cancellations.</p>
+          </div>
+        </div>
+
+        <div id="allCustomerOrdersList"></div>
+      </section>
+
+      <!-- PANE 3: Wishlist -->
+      <section id="pane-wishlist" class="dashboard-view-pane">
+        <div class="dashboard-header">
+          <div class="dashboard-title-group">
+            <h2>Saved Wishlist Products</h2>
+            <p>Quickly order seasonal harvests you've saved for later.</p>
+          </div>
+        </div>
+
+        <div class="product-grid" id="wishlistProductsGrid"></div>
+      </section>
+
+      <!-- PANE 4: My Reviews -->
+      <section id="pane-reviews" class="dashboard-view-pane">
+        <div class="dashboard-header">
+          <div class="dashboard-title-group">
+            <h2 data-i18n="cd_my_reviews">My Product Reviews</h2>
+            <p>Your ratings and feedback left for our partner farmers.</p>
+          </div>
+        </div>
+
+        <div class="dashboard-table-card" style="padding: 1.5rem;" id="customerReviewsList"></div>
+      </section>
+
+      <!-- PANE 5: Notifications -->
+      <section id="pane-notifications" class="dashboard-view-pane">
+        <div class="dashboard-header">
+          <div class="dashboard-title-group">
+            <h2>Notifications & Alerts</h2>
+            <p>Real-time order dispatches, farmer confirmations, and announcements.</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="markAllNotificationsRead()">
+            <i class="fa-solid fa-check-double"></i> Mark All Read
+          </button>
+        </div>
+
+        <div id="customerNotificationsList"></div>
+      </section>
+
+      <!-- PANE 6: Profile & Addresses -->
+      <section id="pane-profile" class="dashboard-view-pane">
+        <div class="dashboard-header">
+          <div class="dashboard-title-group">
+            <h2>Profile & Default Delivery Address</h2>
+            <p>Keep your contact details up to date for smooth doorstep deliveries.</p>
+          </div>
+        </div>
+
+        <div class="dashboard-table-card" style="max-width: 680px; padding: 2.25rem;">
+          <form onsubmit="handleProfileSave(event)">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" id="profileNameInput" class="form-control" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" id="profilePhoneInput" class="form-control" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Delivery Street Address</label>
+              <input type="text" id="profileStreetInput" class="form-control" placeholder="House/Flat No., Road" required />
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+              <div class="form-group">
+                <label class="form-label">City</label>
+                <input type="text" id="profileCityInput" class="form-control" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">State</label>
+                <input type="text" id="profileStateInput" class="form-control" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">PIN Code</label>
+                <input type="text" id="profilePincodeInput" class="form-control" required />
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+              <i class="fa-solid fa-floppy-disk"></i> Save Profile Details
+            </button>
+          </form>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Interactive Order Tracking Timeline Modal -->
+  <div class="modal-backdrop" id="orderTrackingModal">
+    <div class="modal-box" style="max-width: 650px;">
+      <div class="modal-header">
+        <div>
+          <h3>Live Order Journey</h3>
+          <span id="trackingOrderNumber" style="font-size: 0.85rem; color: var(--color-green-700); font-weight: 700;">KC-000</span>
+        </div>
+        <button class="modal-close-btn" onclick="closeOrderTrackingModal()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem; font-size: 0.88rem; background-color: var(--bg-secondary); padding: 0.85rem 1.25rem; border-radius: var(--radius-md);">
+          <div>
+            <span class="text-muted">Order Date:</span> <strong id="trackingOrderDate">-</strong>
+          </div>
+          <div>
+            <span class="text-muted">Amount:</span> <strong id="trackingTotalAmount">₹0</strong> (COD)
+          </div>
+        </div>
+
+        <!-- Visual Timeline -->
+        <div class="tracking-timeline">
+          
+          <div class="timeline-step tracking-step-item">
+            <div class="timeline-node">1</div>
+            <span class="timeline-label">Order Placed</span>
+          </div>
+
+          <div class="timeline-step tracking-step-item">
+            <div class="timeline-node">2</div>
+            <span class="timeline-label">Farmer Accepted</span>
+          </div>
+
+          <div class="timeline-step tracking-step-item">
+            <div class="timeline-node">3</div>
+            <span class="timeline-label">Harvested & Packed</span>
+          </div>
+
+          <div class="timeline-step tracking-step-item">
+            <div class="timeline-node">4</div>
+            <span class="timeline-label">Out for Delivery</span>
+          </div>
+
+          <div class="timeline-step tracking-step-item">
+            <div class="timeline-node">5</div>
+            <span class="timeline-label">Delivered Fresh</span>
+          </div>
+
+        </div>
+
+        <div style="background-color: var(--color-green-50); border: 1px solid var(--color-green-200); border-radius: var(--radius-md); padding: 1rem; margin-top: 2rem; font-size: 0.85rem; color: var(--color-green-800);">
+          <i class="fa-solid fa-truck-fast"></i> Produce is freshly harvested and transported directly from the farm to minimize handling time.
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" onclick="closeOrderTrackingModal()">Close Tracking</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/translations.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/customer-dashboard.js"></script>
+</body>
+</html>

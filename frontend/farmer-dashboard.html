@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Farmer Dashboard – Kissan Cart</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/dashboards.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+
+  <!-- Sticky Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="/index.html" class="brand-logo">
+        <div class="logo-badge"><i class="fa-solid fa-seedling"></i></div>
+        <div class="brand-text">
+          <span class="brand-name">Kissan<span>Cart</span></span>
+          <span class="brand-sub" data-i18n="tagline">From Our Farms to Your Homes</span>
+        </div>
+      </a>
+
+      <div style="font-weight: 800; color: var(--color-green-700); font-size: 1.05rem;">
+        <i class="fa-solid fa-tractor" style="margin-right: 0.4rem;"></i> Farmer Producer Portal
+      </div>
+
+      <div class="nav-actions">
+        <div class="lang-selector-wrapper">
+          <i class="fa-solid fa-globe lang-globe-icon"></i>
+          <select id="languageSelect" class="lang-select">
+            <option value="en">English</option>
+            <option value="kn">ಕನ್ನಡ (Kannada)</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+          </select>
+          <i class="fa-solid fa-chevron-down lang-arrow"></i>
+        </div>
+
+        <button id="themeToggle" class="btn-icon-toggle"><i class="fa-solid fa-moon"></i></button>
+
+        <a href="/shop.html" class="btn btn-secondary btn-sm">
+          <i class="fa-solid fa-store"></i> View Marketplace
+        </a>
+
+        <div id="navbarAuth"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Dashboard Shell -->
+  <div class="dashboard-wrapper">
+    
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar">
+      <div class="sidebar-profile-card">
+        <img id="sidebarUserAvatar" src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?auto=format&fit=crop&w=200&q=80" class="sidebar-avatar" />
+        <div>
+          <h4 id="sidebarUserName" class="sidebar-user-name">Farmer Name</h4>
+          <span class="sidebar-role-badge" id="farmerFarmNameHeader">Green Valley Farm</span>
+        </div>
+      </div>
+
+      <ul class="sidebar-nav">
+        <li>
+          <button class="sidebar-item-link active" data-pane="overview">
+            <i class="fa-solid fa-gauge-high"></i>
+            <span data-i18n="dashboard_overview">Overview</span>
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-item-link" data-pane="products">
+            <i class="fa-solid fa-seedling"></i>
+            <span data-i18n="my_products">My Products</span>
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-item-link" onclick="openAddProductModal()">
+            <i class="fa-solid fa-circle-plus" style="color: var(--color-green-500);"></i>
+            <span data-i18n="add_product">Add Product</span>
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-item-link" data-pane="orders">
+            <i class="fa-solid fa-truck-ramp-box"></i>
+            <span data-i18n="orders">Orders</span>
+            <span id="sidebarOrderBadge" class="sidebar-counter-badge" style="display: none;">0</span>
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-item-link" data-pane="inventory">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <span data-i18n="inventory">Inventory</span>
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-item-link" data-pane="logout">
+            <i class="fa-solid fa-right-from-bracket" style="color: var(--color-red-600);"></i>
+            <span data-i18n="nav_logout">Logout</span>
+          </button>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Dashboard Body -->
+    <main class="dashboard-main">
+      
+      <!-- PANE 1: Overview -->
+      <section id="pane-overview" class="dashboard-view-pane active">
+        <div class="dashboard-header">
+          <div class="dashboard-title-group">
+            <h2 data-i18n="welcome">Farmer Dashboard</h2>
+            <p>Monitor your listed crop performance, incoming customer orders, and sales revenue.</p>
+          </div>
+          <button class="btn btn-primary" onclick="openAddProductModal()">
+            <i class="fa-solid fa-plus"></i>
+            <span data-i18n="add_product">Add New Harvest</span>
+          </button>
+        </div>
+
+        <!-- Verification Banner Container -->
+        <div id="verificationBannerContainer"></div>
+
+        <!-- KPI Metrics Grid -->
+        <div class="metrics-grid">
+          
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-icon kpi-green">
+              <i class="fa-solid fa-wheat-awn"></i>
+            </div>
+            <div class="stat-kpi-meta">
+              <span id="kpiTotalProducts" class="stat-kpi-value">0</span>
+              <span class="stat-kpi-label" data-i18n="fd_total_products">Total Products</span>
+            </div>
+          </div>
+
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-icon kpi-blue">
+              <i class="fa-solid fa-check-double"></i>
+            </div>
+            <div class="stat-kpi-meta">
+              <span id="kpiActiveProducts" class="stat-kpi-value">0</span>
+              <span class="stat-kpi-label" data-i18n="fd_active_listings">Active Listings</span>
+            </div>
+          </div>
+
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-icon kpi-red">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div class="stat-kpi-meta">
+              <span id="kpiLowStock" class="stat-kpi-value">0</span>
+              <span class="stat-kpi-label" data-i18n="fd_low_stock">Low Stock Items</span>
+            </div>
+          </div>
+
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-icon kpi-yellow">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+            </div>
+            <div class="stat-kpi-meta">
+              <span id="kpiPendingOrders" class="stat-kpi-value">0</span>
+              <span class="stat-kpi-label" data-i18n="fd_pending_orders">Pending Orders</span>
+            </div>
+          </div>
+
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-icon kpi-green">
+              <i class="fa-solid fa-indian-rupee-sign"></i>
+            </div>
+            <div class="stat-kpi-meta">
+              <span id="kpiTotalEarnings" class="stat-kpi-value">₹0</span>
+              <span class="stat-kpi-label" data-i18n="fd_total_earnings">Total Net Earnings</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sales Analytics Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 data-i18n="fd_sales_trend">Monthly Sales Analytics</h3>
+            <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600;">Real fulfilled sales</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="farmerSalesChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Recent Customer Orders -->
+        <div class="dashboard-table-card">
+          <div class="table-card-header">
+            <h3 data-i18n="fd_recent_orders">Recent Customer Orders</h3>
+            <button class="btn btn-secondary btn-sm" onclick="switchPane('orders')">View All</button>
+          </div>
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th data-i18n="fd_order_number">Order ID</th>
+                  <th data-i18n="fd_customer">Customer</th>
+                  <th data-i18n="fd_items">Items</th>
+                  <th data-i18n="fd_amount">Amount</th>
+                  <th>Status</th>
+                  <th data-i18n="fd_action">Action</th>
+                </tr>
+              </thead>
+              <tbody id="recentOrdersTableBody">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANE 2: My Products -->
+      <section id="pane-products" class="dashboard-view-pane">
+        <div class="dashboard-header">
+          <div class="dashboard-title-group">
+            <h2 data-i18n="my_products">My Products</h2>
+            <p>Manage your crop inventory, update prices, or add new listings.</p>
+          </div>
+          <button class="btn btn-primary" onclick="openAddProductModal()">
+            <i class="fa-solid fa-plus"></i> Add Product
+          </button>
+        </div>
+
+        <div class="dashboard-table-card">
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Product Name</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Available Quantity</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="farmerProductsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANE 3: Orders -->
+      <section id="pane-orders" class="dashboard-view-pane">
+        <div class="dashboard-header">
+          <div class="dashboard-title-group">
+            <h2 data-i18n="orders">Incoming Customer Orders</h2>
+            <p>Accept new incoming orders, prepare packaging, and update delivery milestones.</p>
+          </div>
+        </div>
+
+        <div class="dashboard-table-card">
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Order #</th>
+                  <th>Customer</th>
+                  <th>Crop Item</th>
+                  <th>Amount</th>
+                  <th>Delivery Address</th>
+                  <th>Fulfillment Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="allOrdersTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANE 4: Inventory -->
+      <section id="pane-inventory" class="dashboard-view-pane">
+        <div class="dashboard-header">
+          <div class="dashboard-title-group">
+            <h2 data-i18n="inventory">Quick Inventory Update</h2>
+            <p>Rapidly update stock quantities for each harvest after new crop picking.</p>
+          </div>
+        </div>
+
+        <div class="dashboard-table-card">
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Harvest Name</th>
+                  <th>Price / Unit</th>
+                  <th>Update Stock Quantity</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="inventoryTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Add Product Modal -->
+  <div class="modal-backdrop" id="addProductModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 data-i18n="add_product">Add New Farm Product</h3>
+        <button class="modal-close-btn" onclick="closeAddProductModal()">&times;</button>
+      </div>
+      <form id="addProductForm" onsubmit="handleAddProductSubmit(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Product Name *</label>
+            <input type="text" id="addProdName" class="form-control" placeholder="e.g. Farm Fresh Country Tomatoes" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description *</label>
+            <textarea id="addProdDescription" class="form-control" rows="3" placeholder="Describe the harvest method, taste, nutrition..." required></textarea>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Category *</label>
+              <select id="addProdCategory" class="form-select" required></select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Unit of Measurement *</label>
+              <select id="addProdUnit" class="form-select" required>
+                <option value="kg">kg (Kilogram)</option>
+                <option value="gram">gram</option>
+                <option value="litre">litre</option>
+                <option value="piece">piece</option>
+                <option value="bag">bag</option>
+                <option value="quintal">quintal</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Price per Unit (₹) *</label>
+              <input type="number" id="addProdPrice" class="form-control" placeholder="38" min="1" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Available Quantity *</label>
+              <input type="number" id="addProdQuantity" class="form-control" placeholder="100" min="0" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Product Image URL or Upload</label>
+            <input type="url" id="addProdImageUrl" class="form-control" placeholder="https://images.unsplash.com/photo-..." />
+            <input type="file" id="addProdImageFile" accept="image/*" class="form-control" style="margin-top: 0.5rem;" />
+            <small class="text-muted">Upload an image file or provide an image URL</small>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-check">
+              <input type="checkbox" id="addProdOrganicCheck" />
+              <span>Declare as 100% Organic / Chemical-Free</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="closeAddProductModal()">Cancel</button>
+          <button type="submit" id="submitAddProdBtn" class="btn btn-primary btn-sm">Save & Publish Crop Listing</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Product Modal -->
+  <div class="modal-backdrop" id="editProductModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Edit Crop Listing</h3>
+        <button class="modal-close-btn" onclick="closeEditProductModal()">&times;</button>
+      </div>
+      <form onsubmit="handleEditProductSubmit(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Product Name *</label>
+            <input type="text" id="editProdName" class="form-control" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description *</label>
+            <textarea id="editProdDescription" class="form-control" rows="3" required></textarea>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Category *</label>
+              <select id="editProdCategory" class="form-select" required></select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Unit *</label>
+              <select id="editProdUnit" class="form-select" required>
+                <option value="kg">kg</option>
+                <option value="gram">gram</option>
+                <option value="litre">litre</option>
+                <option value="piece">piece</option>
+                <option value="bag">bag</option>
+                <option value="quintal">quintal</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Price (₹) *</label>
+              <input type="number" id="editProdPrice" class="form-control" min="1" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Available Quantity *</label>
+              <input type="number" id="editProdQuantity" class="form-control" min="0" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Image URL</label>
+            <input type="url" id="editProdImageUrl" class="form-control" />
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-check">
+              <input type="checkbox" id="editProdOrganicCheck" />
+              <span>Organic Product</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="closeEditProductModal()">Cancel</button>
+          <button type="submit" id="submitEditProdBtn" class="btn btn-primary btn-sm">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Farmer Verification Modal -->
+  <div class="modal-backdrop" id="verificationModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Apply for Official Verified Farmer Badge</h3>
+        <button class="modal-close-btn" onclick="closeVerificationModal()">&times;</button>
+      </div>
+      <form onsubmit="handleVerificationSubmit(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Farm / Orchard Name *</label>
+            <input type="text" id="verifFarmName" class="form-control" placeholder="e.g. Green Valley Farm" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Farm Physical Address & Village *</label>
+            <input type="text" id="verifFarmAddress" class="form-control" placeholder="Village, Taluk, District" required />
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Proof Document Type *</label>
+              <select id="verifIdType" class="form-select" required>
+                <option value="land_records">Land Records / RTC</option>
+                <option value="kisan_credit_card">Kisan Credit Card (KCC)</option>
+                <option value="aadhaar">Aadhaar Card</option>
+                <option value="voter_id">Voter ID</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Document ID Number *</label>
+              <input type="text" id="verifIdNumber" class="form-control" placeholder="Number (Masked for privacy)" required />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Farm Cultivation Size (Acres)</label>
+              <input type="number" id="verifFarmSize" class="form-control" placeholder="5" min="0.5" step="0.5" />
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center; margin-top: 1.5rem;">
+              <label class="form-check">
+                <input type="checkbox" id="verifOrganicCheck" />
+                <span>NPOP / Organic Certified</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="closeVerificationModal()">Cancel</button>
+          <button type="submit" id="submitVerificationBtn" class="btn btn-primary btn-sm">Submit for Admin Review</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script src="js/translations.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/farmer-dashboard.js"></script>
+</body>
+</html>

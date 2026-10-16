@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shopping Cart – Kissan Cart</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/dashboards.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+
+  <style>
+    .cart-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 2.5rem;
+      margin: 2rem 0 4rem 0;
+    }
+    .cart-items-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .cart-item-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 140px 100px 40px;
+      gap: 1.25rem;
+      align-items: center;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .cart-item-row:last-child {
+      border-bottom: none;
+    }
+    .cart-thumb {
+      width: 80px;
+      height: 80px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      background-color: var(--bg-tertiary);
+    }
+    .order-summary-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+      height: fit-content;
+      position: sticky;
+      top: 90px;
+    }
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 1rem;
+      margin-top: 1rem;
+      border-top: 2px dashed var(--border-color);
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+    .qty-stepper-sm {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .qty-stepper-sm button {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+    .qty-stepper-sm input {
+      width: 40px;
+      height: 32px;
+      border: none;
+      text-align: center;
+      font-weight: 700;
+      background: none;
+    }
+    @media (max-width: 900px) {
+      .cart-grid {
+        grid-template-columns: 1fr;
+      }
+      .cart-item-row {
+        grid-template-columns: 70px 1fr 40px;
+        gap: 1rem;
+      }
+      .cart-item-controls {
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="/index.html" class="brand-logo">
+        <div class="logo-badge"><i class="fa-solid fa-seedling"></i></div>
+        <div class="brand-text">
+          <span class="brand-name">Kissan<span>Cart</span></span>
+          <span class="brand-sub" data-i18n="tagline">From Our Farms to Your Homes</span>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/index.html" class="nav-link" data-i18n="nav_home">Home</a></li>
+        <li><a href="/shop.html" class="nav-link" data-i18n="nav_shop">Shop</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <div class="lang-selector-wrapper">
+          <i class="fa-solid fa-globe lang-globe-icon"></i>
+          <select id="languageSelect" class="lang-select">
+            <option value="en">English</option>
+            <option value="kn">ಕನ್ನಡ (Kannada)</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+          </select>
+          <i class="fa-solid fa-chevron-down lang-arrow"></i>
+        </div>
+
+        <button id="themeToggle" class="btn-icon-toggle"><i class="fa-solid fa-moon"></i></button>
+
+        <a href="/cart.html" class="cart-nav-link active" id="cartNavBtn">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <span id="cartBadge" class="cart-badge" style="display: none;">0</span>
+        </a>
+
+        <div id="navbarAuth"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container" style="padding-top: 2rem;">
+      
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+        <h1 style="font-size: 2rem; font-weight: 800; color: var(--text-primary);" data-i18n="shopping_cart">Your Shopping Cart</h1>
+        <a href="/shop.html" class="btn btn-secondary btn-sm" data-i18n="btn_continue_shopping">
+          <i class="fa-solid fa-arrow-left"></i> Continue Shopping
+        </a>
+      </div>
+
+      <div id="cartViewContainer">
+        <!-- Rendered via JS -->
+        <div class="empty-state">
+          <i class="fa-solid fa-spinner fa-spin fa-2x" style="color: var(--color-green-600);"></i>
+          <p style="margin-top: 1rem;">Loading your farm basket...</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <p>&copy; 2026 Kissan Cart Inc. <span data-i18n="all_rights_reserved">All rights reserved. Dedicated to India's farming community.</span></p>
+    </div>
+  </footer>
+
+  <script src="js/translations.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/main.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!auth.isAuthenticated()) {
+        renderGuestCartPrompt();
+        return;
+      }
+      await renderCart();
+    });
+
+    function renderGuestCartPrompt() {
+      const container = document.getElementById('cartViewContainer');
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon"><i class="fa-solid fa-user-lock"></i></div>
+          <h3 class="empty-state-title">Login Required</h3>
+          <p class="empty-state-desc">Please login as a customer to view and manage your shopping cart.</p>
+          <a href="/login.html?redirect=/cart.html" class="btn btn-primary btn-lg">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Login Now
+          </a>
+        </div>
+      `;
+    }
+
+    async function renderCart() {
+      const container = document.getElementById('cartViewContainer');
+      try {
+        const cartData = await cart.loadCartData();
+        if (!cartData || !cartData.items || cartData.items.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon"><i class="fa-solid fa-basket-shopping"></i></div>
+              <h3 class="empty-state-title" data-i18n="cart_empty">Your cart is currently empty</h3>
+              <p class="empty-state-desc">Explore direct farm harvests, organic fruits, vegetables, and aromatic spices.</p>
+              <a href="/shop.html" class="btn btn-primary" data-i18n="btn_continue_shopping">Explore Fresh Produce</a>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = `
+          <div class="cart-grid">
+            
+            <!-- Items Card -->
+            <div class="cart-items-card">
+              ${cartData.items.map(item => `
+                <div class="cart-item-row">
+                  <img src="${item.product?.images?.[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=200&q=80'}" class="cart-thumb" />
+                  
+                  <div>
+                    <h4 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.2rem;">
+                      <a href="/product-details.html?id=${item.product?._id}">${item.product?.name}</a>
+                    </h4>
+                    <p style="font-size: 0.82rem; color: var(--text-muted);">
+                      Farmer: ${item.product?.farmer?.name || 'Local Farmer'} • ₹${item.product?.price} / ${item.product?.unit}
+                    </p>
+                    ${!item.isStockAvailable ? '<span style="color: var(--color-red-600); font-size: 0.75rem; font-weight: 700;">Only ' + item.product?.availableQuantity + ' available in stock!</span>' : ''}
+                  </div>
+
+                  <div class="qty-stepper-sm">
+                    <button onclick="changeCartQty('${item.product?._id}', ${item.quantity - 1})">-</button>
+                    <input type="text" value="${item.quantity}" readonly />
+                    <button onclick="changeCartQty('${item.product?._id}', ${item.quantity + 1})">+</button>
+                  </div>
+
+                  <div style="font-size: 1.1rem; font-weight: 800; color: var(--text-primary); text-align: right;">
+                    ₹${item.itemTotal}
+                  </div>
+
+                  <button onclick="deleteCartItem('${item.product?._id}')" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.1rem;" title="Remove Item">
+                    <i class="fa-regular fa-trash-can"></i>
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+
+            <!-- Order Summary Sidebar -->
+            <div class="order-summary-card">
+              <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary); margin-bottom: 1.5rem;" data-i18n="order_summary">Order Summary</h3>
+
+              <div class="summary-line">
+                <span data-i18n="subtotal">Subtotal (${cartData.itemCount} items)</span>
+                <span style="font-weight: 700;">₹${cartData.subtotal}</span>
+              </div>
+
+              <div class="summary-line">
+                <span data-i18n="shipping_fee">Delivery Charges</span>
+                <span style="font-weight: 700; color: ${cartData.shippingFee === 0 ? 'var(--color-green-600)' : 'inherit'};">
+                  ${cartData.shippingFee === 0 ? 'FREE' : '₹' + cartData.shippingFee}
+                </span>
+              </div>
+
+              <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.4;" data-i18n="free_delivery_note">
+                Orders above ₹500 qualify for free doorstep delivery!
+              </p>
+
+              <div class="summary-total">
+                <span data-i18n="total">Total Amount</span>
+                <span style="color: var(--color-green-700);">₹${cartData.totalAmount}</span>
+              </div>
+
+              <div style="margin-top: 1.75rem;">
+                <button class="btn btn-primary btn-lg btn-block" onclick="proceedToCheckout()" ${cartData.hasOutOfStock ? 'disabled' : ''}>
+                  <i class="fa-solid fa-lock"></i>
+                  <span data-i18n="btn_proceed_checkout">Proceed to Checkout</span>
+                </button>
+                ${cartData.hasOutOfStock ? '<p style="color: var(--color-red-600); font-size: 0.8rem; text-align: center; margin-top: 0.5rem;">Adjust quantities for out-of-stock items before checkout.</p>' : ''}
+              </div>
+
+              <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.82rem; color: var(--text-muted); margin-top: 1.25rem;">
+                <i class="fa-solid fa-shield-halved" style="color: var(--color-green-600);"></i>
+                <span>Direct Farmer Fulfillment Guaranteed</span>
+              </div>
+            </div>
+
+          </div>
+        `;
+      } catch (err) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3 class="empty-state-title">Error Loading Cart</h3>
+            <p class="empty-state-desc">${err.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    async function changeCartQty(productId, newQty) {
+      if (newQty <= 0) {
+        await deleteCartItem(productId);
+        return;
+      }
+      try {
+        await cart.updateItemQuantity(productId, newQty);
+        await renderCart();
+      } catch(e) {}
+    }
+
+    async function deleteCartItem(productId) {
+      try {
+        await cart.removeItem(productId);
+        await renderCart();
+      } catch(e) {}
+    }
+
+    function proceedToCheckout() {
+      window.location.href = '/checkout.html';
+    }
+  </script>
+</body>
+</html>

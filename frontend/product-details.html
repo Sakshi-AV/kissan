@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Harvest Details – Kissan Cart</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Leaflet CSS for Farm Geolocation Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/dashboards.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+
+  <style>
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 3.5rem;
+      margin: 2rem 0 4rem 0;
+    }
+    .product-gallery-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .gallery-main-img {
+      width: 100%;
+      height: 440px;
+      object-fit: cover;
+    }
+    .product-meta-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      background-color: var(--bg-secondary);
+      padding: 1.25rem;
+      border-radius: var(--radius-lg);
+      margin: 1.75rem 0;
+      border: 1px solid var(--border-color);
+    }
+    .meta-box h5 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.25rem;
+    }
+    .meta-box p {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+    .farmer-profile-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      margin: 3rem 0;
+      box-shadow: var(--shadow-sm);
+    }
+    .map-box-container {
+      margin-top: 1.5rem;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      height: 240px;
+      position: relative;
+      z-index: 1;
+    }
+    .qty-stepper {
+      display: inline-flex;
+      align-items: center;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background-color: var(--card-bg);
+    }
+    .qty-btn {
+      width: 42px;
+      height: 42px;
+      border: none;
+      background: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      transition: background-color var(--transition-fast);
+    }
+    .qty-btn:hover {
+      background-color: var(--bg-tertiary);
+    }
+    .qty-input {
+      width: 50px;
+      height: 42px;
+      border: none;
+      text-align: center;
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--text-primary);
+      background: none;
+      outline: none;
+    }
+    @media (max-width: 900px) {
+      .details-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .gallery-main-img {
+        height: 320px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="/index.html" class="brand-logo">
+        <div class="logo-badge"><i class="fa-solid fa-seedling"></i></div>
+        <div class="brand-text">
+          <span class="brand-name">Kissan<span>Cart</span></span>
+          <span class="brand-sub" data-i18n="tagline">From Our Farms to Your Homes</span>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/index.html" class="nav-link" data-i18n="nav_home">Home</a></li>
+        <li><a href="/shop.html" class="nav-link active" data-i18n="nav_shop">Shop</a></li>
+        <li><a href="/index.html#categoriesSection" class="nav-link" data-i18n="nav_categories">Categories</a></li>
+        <li><a href="/register.html?role=farmer" class="nav-link" data-i18n="nav_sell">Sell Products</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <div class="lang-selector-wrapper">
+          <i class="fa-solid fa-globe lang-globe-icon"></i>
+          <select id="languageSelect" class="lang-select">
+            <option value="en">English</option>
+            <option value="kn">ಕನ್ನಡ (Kannada)</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+          </select>
+          <i class="fa-solid fa-chevron-down lang-arrow"></i>
+        </div>
+
+        <button id="themeToggle" class="btn-icon-toggle"><i class="fa-solid fa-moon"></i></button>
+
+        <a href="/cart.html" class="cart-nav-link" id="cartNavBtn">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <span id="cartBadge" class="cart-badge" style="display: none;">0</span>
+        </a>
+
+        <div id="navbarAuth"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container" style="padding-top: 1.5rem;" id="productDetailContainer">
+      
+      <!-- Breadcrumb -->
+      <nav style="display: flex; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+        <a href="/index.html" style="color: var(--text-muted);">Home</a>
+        <span>/</span>
+        <a href="/shop.html" id="breadcrumbCategory" style="color: var(--text-muted);">Shop</a>
+        <span>/</span>
+        <span id="breadcrumbProduct" style="color: var(--text-primary); font-weight: 700;">Loading...</span>
+      </nav>
+
+      <!-- 2-Column Details Grid -->
+      <div class="details-grid">
+        
+        <!-- Left Column: Gallery & Geolocation Map -->
+        <div>
+          <div class="product-gallery-card">
+            <img id="productMainImage" src="" alt="Product image" class="gallery-main-img" />
+            <div id="productGalleryThumbs" style="display: flex; gap: 0.6rem; margin-top: 1rem; overflow-x: auto; padding-bottom: 0.25rem;"></div>
+          </div>
+
+          <!-- Farm Geolocation Map Card -->
+          <div style="margin-top: 2rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <h4 style="font-size: 1.1rem; font-weight: 800; color: var(--text-primary);">
+                <i class="fa-solid fa-map-location-dot" style="color: var(--color-green-600); margin-right: 0.4rem;"></i>
+                <span data-i18n="farm_location_map">Farm Geolocation & Origin</span>
+              </h4>
+              <span class="badge badge-verified" style="font-size: 0.72rem;">GPS Verified</span>
+            </div>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.25rem;">
+              Pinned to verified agricultural coordinates on OpenStreetMap.
+            </p>
+            <div id="farmLocationMap" class="map-box-container"></div>
+          </div>
+        </div>
+
+        <!-- Right Column: Info, Pricing, Purchasing Stepper -->
+        <div>
+          <span id="productCategoryTag" class="product-category-tag">Produce</span>
+          <h1 id="productTitle" style="font-size: 2.2rem; font-weight: 800; color: var(--text-primary); margin: 0.4rem 0 0.8rem 0; line-height: 1.2;">
+            Loading...
+          </h1>
+
+          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.4rem;">
+              <span id="productRatingStars"></span>
+              <span id="productRatingText" style="font-size: 0.88rem; font-weight: 700; color: var(--text-secondary);"></span>
+            </div>
+            <span style="color: var(--border-color);">|</span>
+            <div id="productBadges" style="display: flex; gap: 0.5rem;"></div>
+          </div>
+
+          <!-- Price Display -->
+          <div style="display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 1.5rem;">
+            <span id="productPrice" style="font-size: 2.6rem; font-weight: 800; color: var(--color-green-700);"></span>
+            <span id="productUnit" style="font-size: 1.1rem; font-weight: 600; color: var(--text-muted);"></span>
+          </div>
+
+          <p id="productDescription" style="color: var(--text-secondary); line-height: 1.7; font-size: 1rem; margin-bottom: 1.75rem;">
+            Loading description...
+          </p>
+
+          <!-- Meta attributes -->
+          <div class="product-meta-row">
+            <div class="meta-box">
+              <h5 data-i18n="harvest_date">Harvest Date</h5>
+              <p id="productHarvestDate">-</p>
+            </div>
+            <div class="meta-box">
+              <h5 data-i18n="stock_status">Stock Availability</h5>
+              <p id="productStockAvailable">-</p>
+            </div>
+          </div>
+
+          <!-- Purchase Controls -->
+          <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+            <div class="qty-stepper">
+              <button class="qty-btn" onclick="updateQuantity(-1)">-</button>
+              <input type="text" id="productQuantityDisplay" class="qty-input" value="1" readonly />
+              <button class="qty-btn" onclick="updateQuantity(1)">+</button>
+            </div>
+
+            <button id="addToCartBtn" class="btn btn-primary btn-lg" onclick="handleAddToCart()">
+              <i class="fa-solid fa-cart-plus"></i>
+              <span data-i18n="btn_add_to_cart">Add to Cart</span>
+            </button>
+
+            <button id="buyNowBtn" class="btn btn-accent btn-lg" onclick="handleBuyNow()">
+              <i class="fa-solid fa-bolt"></i>
+              <span>Buy Now</span>
+            </button>
+
+            <button id="wishlistBtn" class="btn btn-secondary btn-lg" onclick="toggleProductWishlist()">
+              <i class="fa-regular fa-heart"></i>
+              <span data-i18n="add_to_wishlist">Wishlist</span>
+            </button>
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+            <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--color-green-600); font-weight: 700;">
+              <i class="fa-solid fa-truck"></i> Cash on Delivery Available
+            </div>
+            <button onclick="openReportModal()" style="background: none; border: none; font-size: 0.82rem; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+              <i class="fa-regular fa-flag"></i> <span data-i18n="report_product">Report Listing</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Farmer Profile Card -->
+      <div class="farmer-profile-card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: gap; gap: 1rem;">
+          <div style="display: flex; align-items: center; gap: 1.25rem;">
+            <img id="farmerAvatar" src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?auto=format&fit=crop&w=200&q=80" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-green-500);" />
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <h3 id="farmerName" style="font-size: 1.3rem; font-weight: 800; color: var(--text-primary);">Farmer Name</h3>
+                <i id="farmerVerifiedIcon" class="fa-solid fa-circle-check" style="color: var(--color-blue-500); display: none;" title="Verified Grower"></i>
+              </div>
+              <p id="farmerFarmName" style="font-size: 0.95rem; font-weight: 700; color: var(--color-green-700);">Green Valley Farm</p>
+              <span id="farmerLocation" style="font-size: 0.82rem; color: var(--text-muted);"><i class="fa-solid fa-location-dot"></i> Mandya, Karnataka</span>
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <span class="badge badge-organic" style="font-size: 0.8rem; padding: 0.35rem 0.85rem;">Direct Farm Producer</span>
+            <p id="farmerExperience" style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.35rem; font-weight: 600;">10+ Years Experience</p>
+          </div>
+        </div>
+        <p id="farmerBio" style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; background-color: var(--bg-secondary); padding: 1.25rem; border-radius: var(--radius-md);">
+          Passionate local grower committed to pure soil cultivation and chemical-free harvest.
+        </p>
+      </div>
+
+      <!-- Customer Reviews Section -->
+      <section style="margin: 4rem 0;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
+          <div>
+            <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary);" data-i18n="customer_reviews">Customer Reviews</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">Real feedback from customers who received this harvest</p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openReviewModal()">
+            <i class="fa-solid fa-pen"></i>
+            <span data-i18n="write_review">Write a Review</span>
+          </button>
+        </div>
+
+        <div id="reviewsListContainer" style="background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 2rem;">
+          <!-- Loaded via JS -->
+        </div>
+      </section>
+
+      <!-- Related Products -->
+      <section style="margin: 4rem 0;">
+        <h3 style="font-size: 1.4rem; font-weight: 800; color: var(--text-primary); margin-bottom: 1.5rem;" data-i18n="related_products">
+          Related Harvests from Same Category
+        </h3>
+        <div class="product-grid" id="relatedProductsContainer"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Review Modal -->
+  <div class="modal-backdrop" id="reviewModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 data-i18n="write_review">Write a Product Review</h3>
+        <button class="modal-close-btn" onclick="closeReviewModal()">&times;</button>
+      </div>
+      <form onsubmit="handleReviewSubmit(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" data-i18n="rating">Rating (1 to 5 Stars)</label>
+            <select id="reviewRatingSelect" class="form-select" required>
+              <option value="5">⭐⭐⭐⭐⭐ 5 Stars - Exceptional Freshness</option>
+              <option value="4">⭐⭐⭐⭐ 4 Stars - Very Good Quality</option>
+              <option value="3">⭐⭐⭐ 3 Stars - Average Harvest</option>
+              <option value="2">⭐⭐ 2 Stars - Below Expectations</option>
+              <option value="1">⭐ 1 Star - Poor Quality</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Review Comment</label>
+            <textarea id="reviewCommentInput" class="form-control" rows="4" placeholder="Describe the aroma, taste, packaging, and freshness..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="closeReviewModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm" data-i18n="btn_submit_review">Submit Review</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Report Listing Modal -->
+  <div class="modal-backdrop" id="reportModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 data-i18n="report_product">Report Inaccurate Listing</h3>
+        <button class="modal-close-btn" onclick="closeReportModal()">&times;</button>
+      </div>
+      <form onsubmit="handleReportSubmit(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Reason for Report</label>
+            <select id="reportReasonSelect" class="form-select" required>
+              <option value="fake_listing">Fake Listing / Inaccurate Details</option>
+              <option value="misleading_pricing">Misleading Price or Weight</option>
+              <option value="bad_quality">Spoiled or Damaged Crop</option>
+              <option value="fraud">Suspected Fraudulent Activity</option>
+              <option value="other">Other Complaint</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Detailed Explanation</label>
+            <textarea id="reportDescInput" class="form-control" rows="4" placeholder="Provide specifics so administrators can investigate and contact the seller..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="closeReportModal()">Cancel</button>
+          <button type="submit" class="btn btn-danger btn-sm">Submit Grievance</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <p>&copy; 2026 Kissan Cart Inc. <span data-i18n="all_rights_reserved">All rights reserved. Dedicated to India's farming community.</span></p>
+    </div>
+  </footer>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <script src="js/translations.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/product-details.js"></script>
+</body>
+</html>

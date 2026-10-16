@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kissan Cart – Smart Farmer-to-Consumer Agricultural Marketplace</title>
+  <meta name="description" content="Digital agricultural marketplace directly connecting farmers to conscious consumers. Fresh farm produce, organic grains, fruits, vegetables, and agro tools." />
+  <meta name="keywords" content="farmers market, kissan cart, farm fresh produce, organic vegetables, buy from farmers, direct to consumer agriculture" />
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/dashboards.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+
+  <!-- Sticky Site Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      
+      <!-- Brand Logo -->
+      <a href="/index.html" class="brand-logo" id="logoLink">
+        <div class="logo-badge">
+          <i class="fa-solid fa-seedling"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">Kissan<span>Cart</span></span>
+          <span class="brand-sub" data-i18n="tagline">From Our Farms to Your Homes</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <ul class="nav-links">
+        <li><a href="/index.html" class="nav-link active" data-i18n="nav_home">Home</a></li>
+        <li><a href="/shop.html" class="nav-link" data-i18n="nav_shop">Shop</a></li>
+        <li><a href="#categoriesSection" class="nav-link" data-i18n="nav_categories">Categories</a></li>
+        <li><a href="/register.html?role=farmer" class="nav-link" data-i18n="nav_sell">Sell Products</a></li>
+        <li><a href="#howItWorksSection" class="nav-link" data-i18n="nav_about">About Us</a></li>
+      </ul>
+
+      <!-- Quick Search Bar -->
+      <form class="header-search" id="navbarSearchForm">
+        <div class="search-input-wrapper">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="navbarSearchInput" class="search-input" placeholder="Search crops, fruits, grains..." data-i18n-placeholder="search_placeholder" />
+        </div>
+      </form>
+
+      <!-- Right Nav Actions -->
+      <div class="nav-actions">
+        <!-- Language Switcher -->
+        <div class="lang-selector-wrapper">
+          <i class="fa-solid fa-globe lang-globe-icon"></i>
+          <select id="languageSelect" class="lang-select" aria-label="Choose Language">
+            <option value="en">English</option>
+            <option value="kn">ಕನ್ನಡ (Kannada)</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+          </select>
+          <i class="fa-solid fa-chevron-down lang-arrow"></i>
+        </div>
+
+        <!-- Light/Dark Mode Switcher -->
+        <button id="themeToggle" class="btn-icon-toggle" aria-label="Toggle theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <!-- Notification Bell -->
+        <div class="user-dropdown-container">
+          <button id="notificationBellBtn" class="btn-icon-toggle" style="display: none;" aria-label="Notifications">
+            <i class="fa-regular fa-bell"></i>
+            <span id="notificationBadge" class="cart-badge" style="display: none;">0</span>
+          </button>
+          <div id="notificationPopover" class="notification-popover">
+            <div class="notification-popover-header">
+              <span>Notifications</span>
+              <a href="#" class="text-sm" onclick="markAllNotificationsRead(event)">Mark all read</a>
+            </div>
+            <div id="notificationList" class="notification-list"></div>
+          </div>
+        </div>
+
+        <!-- Cart Nav Link -->
+        <a href="/cart.html" class="cart-nav-link" id="cartNavBtn" aria-label="Shopping Cart">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <span id="cartBadge" class="cart-badge" style="display: none;">0</span>
+        </a>
+
+        <!-- Dynamic Auth Button / Dropdown -->
+        <div id="navbarAuth"></div>
+
+        <!-- Mobile Drawer Toggle -->
+        <button class="mobile-menu-btn" id="mobileMenuToggle" aria-label="Open mobile menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Nav Drawer & Backdrop -->
+  <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+  <aside class="mobile-nav-drawer" id="mobileNavDrawer">
+    <div class="drawer-header">
+      <div class="brand-logo">
+        <div class="logo-badge"><i class="fa-solid fa-seedling"></i></div>
+        <div class="brand-text">
+          <span class="brand-name">Kissan<span>Cart</span></span>
+        </div>
+      </div>
+      <button class="drawer-close-btn" id="mobileMenuClose">&times;</button>
+    </div>
+    <ul class="mobile-nav-links">
+      <li class="mobile-nav-item"><a href="/index.html"><i class="fa-solid fa-house"></i> <span data-i18n="nav_home">Home</span></a></li>
+      <li class="mobile-nav-item"><a href="/shop.html"><i class="fa-solid fa-store"></i> <span data-i18n="nav_shop">Shop Marketplace</span></a></li>
+      <li class="mobile-nav-item"><a href="/cart.html"><i class="fa-solid fa-basket-shopping"></i> <span data-i18n="cart">Cart</span></a></li>
+      <li class="mobile-nav-item"><a href="/register.html?role=farmer"><i class="fa-solid fa-tractor"></i> <span data-i18n="nav_sell">Sell as Farmer</span></a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Landing Content -->
+  <main class="main-content">
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-pattern-overlay"></div>
+      <div class="container hero-grid">
+        
+        <div class="hero-content">
+          <div class="hero-badge-pill">
+            <i class="fa-solid fa-award"></i>
+            <span data-i18n="direct_from_farm">100% Direct from Verified Local Farms</span>
+          </div>
+
+          <h1 class="hero-title" data-i18n="hero_title">
+            Empowering Farmers.<br />Delivering Freshness.
+          </h1>
+
+          <p class="hero-subtitle" data-i18n="hero_subtitle">
+            India's smart digital marketplace directly connecting local farmers to conscious consumers. Enjoy farm-fresh produce at fair prices without unnecessary middlemen.
+          </p>
+
+          <div class="hero-cta-group">
+            <a href="/shop.html" class="btn btn-accent btn-lg" id="shopNowHeroBtn">
+              <i class="fa-solid fa-basket-shopping"></i>
+              <span data-i18n="btn_shop_now">Shop Fresh Produce</span>
+            </a>
+            <a href="/register.html?role=farmer" class="btn btn-secondary btn-lg" id="startSellingHeroBtn">
+              <i class="fa-solid fa-tractor"></i>
+              <span data-i18n="btn_start_selling">Start Selling</span>
+            </a>
+          </div>
+
+          <div class="hero-features-row">
+            <div class="hero-feature-item">
+              <i class="fa-solid fa-circle-check"></i>
+              <span data-i18n="fair_pricing">Fair Prices for Farmers</span>
+            </div>
+            <div class="hero-feature-item">
+              <i class="fa-solid fa-circle-check"></i>
+              <span data-i18n="fresh_guarantee">Purity & Freshness Guaranteed</span>
+            </div>
+            <div class="hero-feature-item">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>Cash on Delivery</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-image-card">
+            <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80" alt="Lush green organic agricultural farm" class="hero-img" />
+          </div>
+
+          <!-- Floating badge 1 -->
+          <div class="floating-badge floating-badge-1">
+            <div class="floating-icon">
+              <i class="fa-solid fa-leaf"></i>
+            </div>
+            <div class="floating-meta">
+              <h4>100% Organic</h4>
+              <p>Chemical & Wax Free</p>
+            </div>
+          </div>
+
+          <!-- Floating badge 2 -->
+          <div class="floating-badge floating-badge-2">
+            <div class="floating-icon">
+              <i class="fa-solid fa-truck-fast"></i>
+            </div>
+            <div class="floating-meta">
+              <h4>24-Hour Fresh</h4>
+              <p>Harvested To Doorstep</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Real Database Statistics Strip -->
+    <section class="container stats-strip">
+      <div class="stats-card-container">
+        
+        <div class="stat-item">
+          <div class="stat-icon-wrapper">
+            <i class="fa-solid fa-users"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-number" id="statsFarmersCount">3+</span>
+            <span class="stat-label" data-i18n="stat_farmers">Verified Farmers</span>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-icon-wrapper">
+            <i class="fa-solid fa-apple-whole"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-number" id="statsProductsCount">13+</span>
+            <span class="stat-label" data-i18n="stat_products">Fresh Products</span>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-icon-wrapper">
+            <i class="fa-solid fa-box-open"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-number" id="statsOrdersCount">3+</span>
+            <span class="stat-label" data-i18n="stat_orders">Completed Orders</span>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-icon-wrapper">
+            <i class="fa-solid fa-face-smile"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-number" id="statsCustomersCount">2+</span>
+            <span class="stat-label" data-i18n="stat_customers">Happy Consumers</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Popular Categories Grid Section -->
+    <section class="container" id="categoriesSection" style="margin-bottom: 5rem;">
+      <div class="section-header">
+        <span class="section-tag" data-i18n="nav_categories">Categories</span>
+        <h2 class="section-title" data-i18n="categories_title">Browse by Agricultural Category</h2>
+        <p class="section-subtitle" data-i18n="categories_subtitle">
+          From daily fresh greens to heritage grains and organic bio-fertilizers
+        </p>
+      </div>
+
+      <div class="categories-grid" id="categoriesContainer">
+        <!-- Rendered dynamically from /api/categories -->
+        <div class="empty-state">
+          <div class="spinner"></div>
+          <p>Loading fresh categories...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Fresh Harvests Section -->
+    <section class="container" style="margin-bottom: 5rem;">
+      <div class="section-header">
+        <span class="section-tag" data-i18n="organic_badge">Pure Quality</span>
+        <h2 class="section-title" data-i18n="featured_title">Featured Farm Harvests</h2>
+        <p class="section-subtitle" data-i18n="featured_subtitle">
+          Hand-picked, freshly harvested produce direct from our verified growers
+        </p>
+      </div>
+
+      <div class="product-grid" id="featuredProductsContainer">
+        <!-- Rendered dynamically from /api/products/featured -->
+      </div>
+
+      <div style="text-align: center;">
+        <a href="/shop.html" class="btn btn-outline-primary btn-lg">
+          <span data-i18n="view_all_products">View All Marketplace Products</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works-section" id="howItWorksSection">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Direct Traceability</span>
+          <h2 class="section-title" data-i18n="how_it_works_title">How Kissan Cart Works</h2>
+          <p class="section-subtitle" data-i18n="how_it_works_subtitle">
+            Simple, transparent, and rewarding for both farmers and families
+          </p>
+        </div>
+
+        <div class="steps-grid">
+          
+          <div class="step-card">
+            <div class="step-number-bubble">1</div>
+            <h3 data-i18n="step_1_title">1. Farmers List Harvests</h3>
+            <p data-i18n="step_1_desc">Farmers add freshly harvested crops, specify fair prices, and manage available inventory on their dashboard.</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number-bubble">2</div>
+            <h3 data-i18n="step_2_title">2. Consumers Browse & Order</h3>
+            <p data-i18n="step_2_desc">Customers explore wholesome farm produce, read farmer profiles, view GPS farm locations, and place direct orders.</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number-bubble">3</div>
+            <h3 data-i18n="step_3_title">3. Direct Fulfillment</h3>
+            <p data-i18n="step_3_desc">Farmers receive immediate notifications, harvest fresh crops, carefully pack items, and dispatch orders.</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number-bubble">4</div>
+            <h3 data-i18n="step_4_title">4. Delivered Fresh</h3>
+            <p data-i18n="step_4_desc">Pure, nutritious agricultural products arrive at your doorstep in peak freshness with cash on delivery.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Benefits Comparison Section -->
+    <section class="container benefits-section">
+      <div class="section-header">
+        <span class="section-tag">Empowerment & Health</span>
+        <h2 class="section-title" data-i18n="benefits_title">Why Choose Kissan Cart?</h2>
+      </div>
+
+      <div class="benefits-grid">
+        
+        <!-- Farmer Benefits -->
+        <div class="benefit-column farmer-column">
+          <div class="benefit-header">
+            <div class="benefit-icon-box">
+              <i class="fa-solid fa-tractor"></i>
+            </div>
+            <h3 data-i18n="benefit_farmer_title">For Farmers</h3>
+          </div>
+          <ul class="benefit-list">
+            <li class="benefit-item">
+              <i class="fa-solid fa-circle-check"></i>
+              <span data-i18n="benefit_farmer_1">Eliminate middlemen and earn up to 40% higher returns.</span>
+            </li>
+            <li class="benefit-item">
+              <i class="fa-solid fa-circle-check"></i>
+              <span data-i18n="benefit_farmer_2">Direct access to thousands of urban consumers and restaurants.</span>
+            </li>
+            <li class="benefit-item">
+              <i class="fa-solid fa-circle-check"></i>
+              <span data-i18n="benefit_farmer_3">Instant digital order tracking and transparent earnings.</span>
+            </li>
+            <li class="benefit-item">
+              <i class="fa-solid fa-circle-check"></i>
+              <span data-i18n="benefit_farmer_4">Government scheme guidance and soil input access.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Consumer Benefits -->
+        <div class="benefit-column consumer-column">
+          <div class="benefit-header">
+            <div class="benefit-icon-box">
+              <i class="fa-solid fa-heart-pulse"></i>
+            </div>
+            <h3 data-i18n="benefit_consumer_title">For Consumers</h3>
+          </div>
+          <ul class="benefit-list">
+            <li class="benefit-item">
+              <i class="fa-solid fa-circle-check"></i>
+              <span data-i18n="benefit_consumer_1">Peak nutritional value harvested within 24 hours of delivery.</span>
+            </li>
+            <li class="benefit-item">
+              <i class="fa-solid fa-circle-check"></i>
+              <span data-i18n="benefit_consumer_2">Know your grower and trace origin down to the exact farm.</span>
+            </li>
+            <li class="benefit-item">
+              <i class="fa-solid fa-circle-check"></i>
+              <span data-i18n="benefit_consumer_3">Fair prices with direct farm-to-table savings.</span>
+            </li>
+            <li class="benefit-item">
+              <i class="fa-solid fa-circle-check"></i>
+              <span data-i18n="benefit_consumer_4">Support local rural livelihoods and sustainable agriculture.</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Farmer Success Stories / Testimonials -->
+    <section class="testimonials-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Impact & Trust</span>
+          <h2 class="section-title" data-i18n="testimonials_title">Farmer Stories of Transformation</h2>
+        </div>
+
+        <div class="testimonials-grid">
+          
+          <div class="testimonial-card">
+            <div>
+              <i class="fa-solid fa-quote-left quote-icon"></i>
+              <p class="testimonial-quote" data-i18n="testimonial_1">
+                "Kissan Cart changed our lives. Previously, middlemen took 40% of our vegetable revenue. Now, Bengaluru families buy directly from my Mandya farm!"
+              </p>
+            </div>
+            <div class="testimonial-author">
+              <img src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?auto=format&fit=crop&w=200&q=80" alt="Ramesh Patel" class="author-avatar" />
+              <div class="author-info">
+                <h4 data-i18n="testimonial_author_1">Ramesh Patel (Mandya, Karnataka)</h4>
+                <p>Green Valley Organic Farms • 18 Years Farming</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <div>
+              <i class="fa-solid fa-quote-left quote-icon"></i>
+              <p class="testimonial-quote" data-i18n="testimonial_2">
+                "The digital marketplace gave our heritage pepper and Gir cow ghee nationwide visibility. Fair pricing with complete dignity."
+              </p>
+            </div>
+            <div class="testimonial-author">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80" alt="Suresh Gowda" class="author-avatar" />
+              <div class="author-info">
+                <h4 data-i18n="testimonial_author_2">Suresh Gowda (Shivamogga, Karnataka)</h4>
+                <p>Sahyadri Orchard & Spices • 12 Years Farming</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter Subscription Section -->
+    <div class="container">
+      <div class="newsletter-card">
+        <div class="newsletter-text">
+          <h3 data-i18n="newsletter_title">Subscribe for Weekly Harvest Alerts</h3>
+          <p data-i18n="newsletter_desc">Receive seasonal crop updates, organic recipes, and direct farmer discounts.</p>
+        </div>
+        <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+          <input type="email" class="newsletter-input" placeholder="Enter your email address" data-i18n-placeholder="newsletter_placeholder" required />
+          <button type="submit" class="btn btn-accent" data-i18n="btn_subscribe">Subscribe</button>
+        </form>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        
+        <div class="footer-brand">
+          <div class="brand-logo">
+            <div class="logo-badge"><i class="fa-solid fa-seedling"></i></div>
+            <div class="brand-text">
+              <span class="brand-name">Kissan<span>Cart</span></span>
+              <span class="brand-sub" data-i18n="tagline">From Our Farms to Your Homes</span>
+            </div>
+          </div>
+          <p data-i18n="footer_about">
+            Kissan Cart is an open digital agricultural marketplace connecting Indian farmers with households to foster sustainable, direct, and transparent food systems.
+          </p>
+          <div class="social-links">
+            <a href="#" class="social-btn" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" class="social-btn" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#" class="social-btn" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="social-btn" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4 data-i18n="footer_quick_links">Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="/index.html" class="footer-link" data-i18n="nav_home">Home</a></li>
+            <li><a href="/shop.html" class="footer-link" data-i18n="nav_shop">Shop Marketplace</a></li>
+            <li><a href="/register.html?role=farmer" class="footer-link" data-i18n="nav_sell">Become a Seller</a></li>
+            <li><a href="/login.html" class="footer-link" data-i18n="nav_login">Login / Sign In</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 data-i18n="footer_policies">Policies & Trust</h4>
+          <ul class="footer-links">
+            <li><a href="#" class="footer-link" data-i18n="farmer_policy">Farmer Quality Standards</a></li>
+            <li><a href="#" class="footer-link" data-i18n="privacy_policy">Privacy Policy</a></li>
+            <li><a href="#" class="footer-link" data-i18n="terms_of_service">Terms of Service</a></li>
+            <li><a href="#" class="footer-link" data-i18n="faq">Frequently Asked Questions</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 data-i18n="footer_contact">Contact & Helpdesk</h4>
+          <ul class="footer-links">
+            <li class="footer-link"><i class="fa-solid fa-location-dot"></i> Kisan Bhawan, MG Road, Bengaluru, Karnataka 560001</li>
+            <li class="footer-link"><i class="fa-solid fa-phone"></i> Helpline: 1800-425-FARM (Toll-Free)</li>
+            <li class="footer-link"><i class="fa-solid fa-envelope"></i> support@kissancart.com</li>
+            <li class="footer-link"><i class="fa-solid fa-shield-halved"></i> 100% Verified Farmer Network</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Kissan Cart Inc. <span data-i18n="all_rights_reserved">All rights reserved. Dedicated to India's farming community.</span></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/translations.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/main.js"></script>
+
+  <script>
+    // Page-specific data hydration from backend APIs
+    document.addEventListener('DOMContentLoaded', async () => {
+      loadCategories();
+      loadFeaturedProducts();
+      loadRealStatistics();
+    });
+
+    async function loadCategories() {
+      const container = document.getElementById('categoriesContainer');
+      try {
+        const data = await api.get('/categories');
+        if (!data.categories || data.categories.length === 0) {
+          container.innerHTML = '<p class="text-muted">No categories available.</p>';
+          return;
+        }
+
+        container.innerHTML = data.categories.map(cat => `
+          <div class="category-card" onclick="window.location.href='/shop.html?category=${cat.slug}'">
+            <div class="category-img-box">
+              <img src="${cat.image || 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=200&q=80'}" alt="${cat.name}" />
+            </div>
+            <h3 class="category-title">${cat.name}</h3>
+            <span class="category-count">${cat.productCount} ${cat.productCount === 1 ? 'Product' : 'Products'}</span>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Failed to load categories:', err);
+      }
+    }
+
+    async function loadFeaturedProducts() {
+      const container = document.getElementById('featuredProductsContainer');
+      try {
+        const data = await api.get('/products/featured');
+        if (!data.featured || data.featured.length === 0) {
+          container.innerHTML = '<p class="text-muted">No featured products currently available.</p>';
+          return;
+        }
+
+        container.innerHTML = data.featured.map(product => renderProductCard(product)).join('');
+      } catch (err) {
+        console.error('Failed to load featured products:', err);
+      }
+    }
+
+    async function loadRealStatistics() {
+      try {
+        const prodData = await api.get('/products');
+        if (prodData.total) {
+          document.getElementById('statsProductsCount').textContent = `${prodData.total}+`;
+        }
+      } catch(e) {}
+    }
+
+    function renderProductCard(product) {
+      const isVerified = product.farmer?.farmerProfile?.isVerified;
+      const farmCity = product.farmLocation?.city || 'Karnataka';
+      const image = product.images?.[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80';
+
+      return `
+        <div class="product-card">
+          <div class="product-img-wrapper" onclick="window.location.href='/product-details.html?id=${product._id}'">
+            <img src="${image}" alt="${product.name}" loading="lazy" />
+            <div class="product-badges">
+              ${product.isOrganic ? '<span class="badge badge-organic"><i class="fa-solid fa-leaf"></i> Organic</span>' : ''}
+              ${isVerified ? '<span class="badge badge-verified"><i class="fa-solid fa-shield-check"></i> Verified</span>' : ''}
+            </div>
+            <button class="btn-wishlist-toggle" onclick="event.stopPropagation(); toggleWishlist('${product._id}', this)" title="Add to Wishlist">
+              <i class="fa-regular fa-heart"></i>
+            </button>
+          </div>
+          
+          <div class="product-content">
+            <div class="product-category-row">
+              <span class="product-category-tag">${product.category?.name || 'Produce'}</span>
+              <div class="product-rating">
+                <i class="fa-solid fa-star"></i>
+                <span>${product.ratingAverage || 5.0} (${product.ratingCount || 1})</span>
+              </div>
+            </div>
+
+            <a href="/product-details.html?id=${product._id}" class="product-title">${product.name}</a>
+
+            <div class="farmer-info-tag">
+              <i class="fa-solid fa-user-check"></i>
+              <span>${product.farmer?.name || 'Local Farmer'} • ${farmCity}</span>
+            </div>
+
+            <div class="product-bottom-row">
+              <div class="price-box">
+                <span class="price-amount">₹${product.price}</span>
+                <span class="price-unit">per ${product.unit}</span>
+              </div>
+
+              ${product.availableQuantity > 0 ? `
+                <button class="btn btn-primary btn-sm" onclick="cart.addToCart('${product._id}', 1)">
+                  <i class="fa-solid fa-cart-plus"></i>
+                  <span data-i18n="btn_add_to_cart">Add to Cart</span>
+                </button>
+              ` : `
+                <button class="btn btn-secondary btn-sm" disabled>
+                  <span data-i18n="btn_out_of_stock">Out of Stock</span>
+                </button>
+              `}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function toggleWishlist(productId, btn) {
+      if (!auth.isAuthenticated()) {
+        showToast('Please login as a customer to add to wishlist', 'info');
+        return;
+      }
+      try {
+        const res = await api.post(`/customer/wishlist/${productId}`);
+        showToast(res.message, 'success');
+        const icon = btn.querySelector('i');
+        if (res.isAdded) {
+          icon.className = 'fa-solid fa-heart';
+          btn.classList.add('active');
+        } else {
+          icon.className = 'fa-regular fa-heart';
+          btn.classList.remove('active');
+        }
+      } catch (err) {
+        showToast(err.message || 'Failed to update wishlist', 'error');
+      }
+    }
+
+    function handleNewsletter(e) {
+      e.preventDefault();
+      showToast('Thank you for subscribing to weekly farm updates!', 'success');
+      e.target.reset();
+    }
+  </script>
+</body>
+</html>
