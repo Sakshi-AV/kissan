@@ -9,8 +9,20 @@ const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
-// Connect to MongoDB
-connectDB();
+// Ensure MongoDB connection before handling /api requests
+app.use('/api', async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error('Database connection error in request:', err.message);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to connect to database. Please ensure MONGODB_URI is configured correctly in Vercel settings and MongoDB Atlas network access allows 0.0.0.0/0.',
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined,
+    });
+  }
+});
 
 // Body Parser Middleware
 app.use(express.json({ limit: '10mb' }));
@@ -74,9 +86,15 @@ app.use((req, res, next) => {
 // Central Error Handler
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
-const server = app.listen(PORT, () => {
-  console.log(`🚀 Kissan Cart Server running in ${process.env.NODE_ENV || 'development'} mode on http://localhost:${PORT}`);
-});
+// Only listen when running standalone directly (not when imported in Vercel Serverless Function)
+if (require.main === module) {
+  // Pre-connect for faster initial local response
+  connectDB().catch((err) => console.error('Initial DB connection warning:', err.message));
 
-module.exports = { app, server };
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Kissan Cart Server running in ${process.env.NODE_ENV || 'development'} mode on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;

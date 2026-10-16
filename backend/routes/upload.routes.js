@@ -6,10 +6,18 @@ const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
 const { protect } = require('../middleware/auth');
 
-// Ensure uploads folder exists
-const uploadDir = path.join(__dirname, '../../uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+// Ensure uploads folder exists (fallback to os.tmpdir() on read-only environments like Vercel)
+const os = require('os');
+const uploadDir = process.env.VERCEL
+  ? path.join(os.tmpdir(), 'uploads')
+  : path.join(__dirname, '../../uploads');
+
+try {
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+} catch (err) {
+  console.warn('Could not initialize uploads directory:', err.message);
 }
 
 // Check if Cloudinary is configured
